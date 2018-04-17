@@ -1,7 +1,7 @@
 {
-  "name": "gulp-ps-tasks",
-  "version": "0.6.3",
-  "description": "Gulp tasks useful for PowerSchool Customizations development",
+  "name": "gulp4-ps-tasks",
+  "version": "0.1.0",
+  "description": "Gulp 4.0 tasks useful for PowerSchool Customizations development",
   "main": "index.js",
   "scripts": {
     "build": "gulp build"
