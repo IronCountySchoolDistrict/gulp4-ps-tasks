@@ -92,7 +92,7 @@ const preprocess = lazypipe()
   })
 
 // Utility tasks
-export const clean = () => del(['dist/*', '!dist/*.zip'])
+export const clean = () => del('dist/*')
 
 export const zip = () => gulp
   .src([
