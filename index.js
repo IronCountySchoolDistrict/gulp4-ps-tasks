@@ -22,23 +22,23 @@ const options = minimist(process.argv.slice(2), knownOptions)
 /**
  * Returns a config object by checking three sources in this order:
  *  1. If there was a --config option passed in the cli options, use the
- *  config.json file provided there.
- *  2. If 1 failed, and there is a config.json file in the project folder, use that config.json
- *  3. If 1 and 2 failed, and there is an environment variable PSTASKS_ROOT, use the config.json in that directory.
+ *  gulp.config.json file provided there.
+ *  2. If 1 failed, and there is a gulp.config.json file in the project folder, use that gulp.config.json
+ *  3. If 1 and 2 failed, and there is an environment variable PSTASKS_ROOT, use the gulp.config.json in that directory.
  *  4. If the first 3 failed, throw an error.
  *
  * @return {object|null}
  */
 function loadConfig () {
   if (options.config) {
-    console.log(`Using config.json found at ${options.config}`)
+    console.log(`Using gulp.config.json found at ${options.config}`)
     const normalizedPath = normalize(options.config)
-    const configStr = readFileSync(`${normalizedPath}/config.json`).toString()
+    const configStr = readFileSync(`${normalizedPath}/gulp.config.json`).toString()
     return JSON.parse(configStr)
   }
   try {
-    const configStr = readFileSync('./config.json').toString()
-    console.log('Using config.json found in project folder')
+    const configStr = readFileSync('./gulp.config.json').toString()
+    console.log('Using gulp.config.json found in project folder')
     return JSON.parse(configStr)
   } catch (e) {
     const psTasksRoot = process.env['PSTASKS_ROOT']
@@ -47,17 +47,17 @@ function loadConfig () {
     } else {
       const normalizedPath = normalize(psTasksRoot)
       try {
-        const configStr = readFileSync(`${normalizedPath}/config.json`)
+        const configStr = readFileSync(`${normalizedPath}/gulp.config.json`)
           .toString()
-        console.log(`using config.json in PSTASKS_ROOT: ${normalizedPath}`)
+        console.log(`using gulp.config.json in PSTASKS_ROOT: ${normalizedPath}`)
         return JSON.parse(configStr)
       } catch (e) {
-        console.log(`error reading config.json found at ${normalizedPath}`)
+        console.log(`error reading gulp.config.json found at ${normalizedPath}`)
       }
     }
   }
 
-  console.log('Could not load config.json -- all three loading methods failed')
+  console.log('Could not load gulp.config.json -- all three loading methods failed')
   return null
 }
 
