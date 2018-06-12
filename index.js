@@ -88,6 +88,9 @@ const preprocess = lazypipe()
     if (config[env].ps_url) {
       context.context.PS_URL = config[env].ps_url
     }
+    if (config[env].api_url) {
+      context.context.API_URL = config[env].api_url
+    }
     return plugins.if(config.hasOwnProperty(env), plugins.preprocess(context))
   })
 
