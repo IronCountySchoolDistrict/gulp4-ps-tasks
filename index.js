@@ -122,7 +122,7 @@ export const buildPreprocess = () => gulp
 
 export const buildWebpack = () => {
   return webpackStream(require(`${process.cwd()}/webpack.config.babel.js`), webpack)
-    .pipe(gulp.dest('dist'))
+    .pipe(gulp.dest('dist/web_root'))
 }
 
 // Tasks Runners
