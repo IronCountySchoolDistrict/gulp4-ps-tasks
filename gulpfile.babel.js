@@ -13,7 +13,8 @@ export const buildCopy = () => gulp
     'LICENSE',
     'README.md',
     'package.json',
-    'config.example.json'
+    'config.example.json',
+    'gulp-sftp-patch4.js'
   ])
   .pipe(gulp.dest('dist'))
 
