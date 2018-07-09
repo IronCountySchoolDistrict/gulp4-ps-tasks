@@ -1,6 +1,7 @@
 import gulp from 'gulp'
 import webpack from 'webpack'
 import gulpLoadPlugins from 'gulp-load-plugins'
+import gulpSftp from './gulp-sftp-patch4';
 import minimist from 'minimist'
 import del from 'del'
 import lazypipe from 'lazypipe'
@@ -76,7 +77,7 @@ if (!config.default_deploy_target && !knownOptions.env) {
 const deploy = lazypipe()
   .pipe(() => {
     const env = options.env
-    return plugins.if(config.hasOwnProperty(env), plugins.sftp(config[env].deploy_credentials))
+    return plugins.if(config.hasOwnProperty(env), gulpSftp(config[env].deploy_credentials))
   })
 
 const preprocess = lazypipe()
@@ -106,11 +107,11 @@ export const zip = () => gulp
   .pipe(plugins.zip('plugin.zip'))
   .pipe(gulp.dest('dist/build/'))
 
-export const deployImg = () => gulp
+  export const deployImg = () => gulp
   .src([
     'dist/web_root/scripts/**',
     'dist/web_root/images/**'
-  ])
+  ], { base: 'dist/web_root' })
   .pipe(deploy())
 
 // Build Tasks
@@ -123,9 +124,10 @@ export const buildPreprocess = () => gulp
   .pipe(preprocess())
   .pipe(gulp.dest('dist'))
 
+
 export const buildWebpack = () => {
-  return webpackStream(require(`${process.cwd()}/webpack.config.babel.js`), webpack)
-    .pipe(gulp.dest('dist/web_root'))
+  return webpackStream(require(`${process.cwd()}/webpack.prod.babel.js`).default, webpack)
+      .pipe(gulp.dest('dist/web_root'))
 }
 
 // Tasks Runners
@@ -141,6 +143,7 @@ export const createPkgNoImage = done => {
     clean, runBuildTasks, zip
   )(done)
 }
+
 export const createPkgWithImage = done => {
   return gulp.series(
     clean, runBuildTasks, deployImg, zip
