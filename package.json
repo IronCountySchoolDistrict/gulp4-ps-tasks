@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/IronCountySchoolDistrict/gulp-ps-tasks.git"
   },
-  "author": "Nathan Jones <nathan.jones@ironmail.org>",
+  "author": "Issac Gable <issac.gable@ironmail.org>",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/IronCountySchoolDistrict/gulp-ps-tasks/issues"
