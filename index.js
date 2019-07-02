@@ -1,6 +1,7 @@
 import gulp from 'gulp'
 import webpack from 'webpack'
 import gulpLoadPlugins from 'gulp-load-plugins'
+import image from 'gulp-image'
 import gulpSftp from './gulp-sftp-patch4'
 import minimist from 'minimist'
 import del from 'del'
@@ -124,6 +125,13 @@ export const buildPreprocess = () => gulp
   .pipe(preprocess())
   .pipe(gulp.dest('dist'))
 
+export const imgCopy = () => gulp
+  .src([
+    './plugin/web_root/images/**/*'
+  ])
+  .pipe(image())
+  .pipe(gulp.dest('dist/web_root/images'))
+
 
 export const buildWebpack = () => {
   return webpackStream(require(`${process.cwd()}/webpack.prod.babel.js`).default, webpack)
@@ -133,7 +141,7 @@ export const buildWebpack = () => {
 // Tasks Runners
 export const runBuildTasks = done => {
   return gulp.parallel(
-    buildPreprocess, buildWebpack
+    gulp.series(buildPreprocess, imgCopy), buildWebpack
   )(done)
 }
 
