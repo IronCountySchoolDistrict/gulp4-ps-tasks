@@ -15,7 +15,7 @@ import {
 pkgInfo(module)
 
 const knownOptions = {
-  string: ['env', 'config']
+  string: ['env']
 }
 
 const options = minimist(process.argv.slice(2), knownOptions)
@@ -31,35 +31,20 @@ const options = minimist(process.argv.slice(2), knownOptions)
  * @return {object|null}
  */
 function loadConfig () {
-  if (options.config) {
-    console.log(`Using gulp.config.json found at ${options.config}`)
-    const normalizedPath = normalize(options.config)
-    const configStr = readFileSync(`${normalizedPath}/gulp.config.json`).toString()
-    return JSON.parse(configStr)
-  }
-  try {
-    const configStr = readFileSync('./gulp.config.json').toString()
-    console.log('Using gulp.config.json found in project folder')
-    return JSON.parse(configStr)
-  } catch (e) {
-    const psTasksRoot = process.env['PSTASKS_ROOT']
-    if (!psTasksRoot) {
-      throw new Error('Unable to locate config. PSTASKS_ROOT env var not set.')
-    } else {
-      const normalizedPath = normalize(psTasksRoot)
-      try {
-        const configStr = readFileSync(`${normalizedPath}/gulp.config.json`)
-          .toString()
-        console.log(`using gulp.config.json in PSTASKS_ROOT: ${normalizedPath}`)
-        return JSON.parse(configStr)
-      } catch (e) {
-        console.log(`error reading gulp.config.json found at ${normalizedPath}`)
-      }
+  const psTasksRoot = process.env['PSTASKS_ROOT']
+  if (!psTasksRoot) {
+    throw new Error('Unable to locate config. PSTASKS_ROOT env var not set.')
+  } else {
+    const normalizedPath = normalize(psTasksRoot)
+    try {
+      const configStr = readFileSync(`${normalizedPath}/gulp.config.json`)
+        .toString()
+      console.log(`using gulp.config.json in PSTASKS_ROOT: ${normalizedPath}`)
+      return JSON.parse(configStr)
+    } catch (e) {
+      console.log(`error reading gulp.config.json found at ${normalizedPath}`)
     }
   }
-
-  console.log('Could not load gulp.config.json -- all three loading methods failed')
-  return null
 }
 
 // Required Functions
@@ -74,12 +59,7 @@ if (!config.default_deploy_target && !knownOptions.env) {
   throw new Error('No deploy target provided in cli options or the default_deploy_target config option')
 }
 
-const deploy = lazypipe()
-  .pipe(() => {
-    const env = options.env
-    return plugins.if(config.hasOwnProperty(env), gulpSftp(config[env].deploy_credentials))
-  })
-
+// Utility tasks
 const preprocess = lazypipe()
   .pipe(() => {
     const env = options.env
@@ -95,7 +75,6 @@ const preprocess = lazypipe()
     return plugins.if(config.hasOwnProperty(env), plugins.preprocess(context))
   })
 
-// Utility tasks
 export const clean = () => del('dist/*')
 
 export const zip = () => gulp
@@ -106,13 +85,6 @@ export const zip = () => gulp
   ])
   .pipe(plugins.zip('plugin.zip'))
   .pipe(gulp.dest('dist/build/'))
-
-  export const deployImg = () => gulp
-  .src([
-    'dist/web_root/scripts/**',
-    'dist/web_root/images/**'
-  ], { base: 'dist/web_root' })
-  .pipe(deploy())
 
 // Build Tasks
 export const buildPreprocess = () => gulp
@@ -145,14 +117,8 @@ export const runBuildTasks = done => {
 }
 
 // Orchestrators
-export const createPkgNoImage = done => {
+export const createPkg = done => {
   return gulp.series(
     clean, runBuildTasks, zip
-  )(done)
-}
-
-export const createPkgWithImage = done => {
-  return gulp.series(
-    clean, runBuildTasks, deployImg, zip
   )(done)
 }
