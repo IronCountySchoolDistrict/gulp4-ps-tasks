@@ -1,23 +1,13 @@
 {
-  "image_server_name": {
-    "ps_url": "",
-    "deploy_credentials": {
-      "host": "",
-      "user": "",
-      "pass": "",
-      "remotePath": ""
-    }
+  "ps_test1": {
+    "ps_url": "https://pstest1.example.com",
+    "api_url": "https://psappstest.example.com"
   },
 
-  "image_server_name2": {
+  "ps_prod": {
     "ps_url": "https://ps.example.com",
-    "deploy_credentials": {
-      "host": "sftp_host",
-      "user": "user",
-      "pass": "password",
-      "remotePath": "/path/to/assets/folder"
-    }
+    "api_url": "https://psapps.example.com"
   },
 
-  "default_deploy_target": "image_server_name"
+  "default_deploy_target": "ps_prod"
 }
