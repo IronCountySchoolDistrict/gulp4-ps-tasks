@@ -13,34 +13,33 @@ npm install --save-dev gulp-ps-tasks
 
 # Configuration
 ### config.json
-A `config.json` file is required for the following information:
+A `gulp.config.json` file is required for the following information:
 * Image server sftp credentials
 * Any URLs that should be dynamically inserted into your project's code
-The `config.json` file location can be specified one of two ways. As soon as a config file is found, the search for a config file stops and the first config file found is used. Note that the config path should only include the path to your `config.json` file -- it should not include the `config.json` filename itself. Trailing slashes don't matter, they will be removed if they're included.
+The `gulp.config.json` file location can be specified one of two ways. As soon as a config file is found, the search for a config file stops and the first config file found is used. Note that the config path should only include the path to your `gulp.config.json` file -- it should not include the `gulp.config.json` filename itself. Trailing slashes don't matter, they will be removed if they're included.
 
-1. `config.json` is placed in your project folder.
-2. Set an environment variable, `PSTASKS_ROOT`, to the directory path of your `config.json` file.
+1. `gulp.config.json` is placed in your project folder.
+2. Set an environment variable, `PSTASKS_ROOT`, to the directory path of your `gulp.config.json` file.
 
-If you have a large number of plugins, I recommend using method 3 because it allows you to create and maintain a single `config.json` file that can be used across all of your plugins. However, if you want it to just work, use method 2.
+If you have a large number of plugins, I recommend using method 3 because it allows you to create and maintain a single `gulp.config.json` file that can be used across all of your plugins. However, if you want it to just work, use method 2.
 
-### config.example.json
-The following config example should be used as a starting point for your own `config.json` file.
+### gulp.config.example.json
+The following config example should be used as a starting point for your own `gulp.config.json` file.
 ```
 {
-  "image_server_name": {
-    "sams_url": "https://sams.example.com",
-    "api_url": "https://api.example.com"
+  "ps_test1": {
+    "ps_url": "https://pstest1.example.com",
+    "api_url": "https://psappstest.example.com"
   },
 
-  "image_server_name2": {
-    "sams_url": "https://sams.example.com",
-    "api_url": "https://api.example.com"
+  "ps_prod": {
+    "ps_url": "https://ps.example.com",
+    "api_url": "https://psapps.example.com"
   },
-  
-  // Optional: If no --env options is passed to the deploy task, 
-  // provide the "image_server_name" that should be used as a default
-  "default_deploy_target": "image_server_name"
+
+  "default_deploy_target": "ps_prod"
 }
+
 ```
 
 # Contributing
